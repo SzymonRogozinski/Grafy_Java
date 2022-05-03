@@ -1,25 +1,14 @@
 package com.company;
 
 public class Graf {
-    final private int columns, verses;
     private int graphs=1;
     final private double min,max;
     private Points points;
 
-    public Graf(int columns, int verse, double min, double max) {
-        this.columns = columns;
-        this.verses = verse;
+    public Graf(int columns, int verses, double min, double max) {
         this.min = min;
         this.max = max;
         points=new Points(verses,columns);
-    }
-
-    public int getColumns() {
-        return columns;
-    }
-
-    public int getVerses() {
-        return verses;
     }
 
     public int getGraphs() {

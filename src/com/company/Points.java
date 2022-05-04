@@ -1,5 +1,7 @@
 package com.company;
 
+import java.util.function.BiFunction;
+
 //Przechowywanie punktów
 public class Points {
     //Wymiary
@@ -19,11 +21,27 @@ public class Points {
         return connection[position][x];
     }
 
-    public void setConnection(int position, int neighbour, double value){
+    public int getVerses() {
+        return verses;
+    }
+
+    public int getColumns() {
+        return columns;
+    }
+    //Do wczytywania z pliku, Tworzy połączenie w jedną stronę
+    public void setOneWayConnection(int position, int neighbour, double value){
         int x=ifNeighbour(position, neighbour);
         if(x==-1)
             throw new IllegalArgumentException("Podane wartości nie sąsiadują ze sobą!");
         connection[position][x]=value;
+    }
+    //Do generowania, Tworzy połączenie w dwie strony
+    public void setTwoWayConnection(int position, int neighbour,double randomValue){
+        int x=ifNeighbour(position, neighbour);
+        if(x==-1)
+            throw new IllegalArgumentException("Podane wartości nie sąsiadują ze sobą!");
+        connection[position][x]=randomValue;
+        connection[neighbour][ifNeighbour(neighbour,position)]=randomValue;
     }
 
     public void destroyConnection(int position, int neighbour){

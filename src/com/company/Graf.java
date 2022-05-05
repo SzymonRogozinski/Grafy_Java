@@ -26,4 +26,17 @@ public class Graf {
     public Points getPoints() {
         return points;
     }
+
+    public void printGraf(){
+        System.out.println("Liczba grafow spojnych: " + graphs);
+        System.out.println("Zakres wartosi: " + min + "-" + max);
+        int lenght=points.getColumns()*points.getVerses();
+        for(int i=0;i<lenght;i++)
+            points.pointNeighbourPrint(i);
+    }
+
+    public void generate(){
+        Generator generator=new Generator();
+        generator.generateGraph(points,min,max);
+    }
 }

@@ -3,10 +3,10 @@ package com.company;
 public class Main {
 
     public static void main(String[] args) {
-	    Points p=new Points(2,3);
-        p.setConnection(1,1,0.6);
-        System.out.println(p.ifNeighbour(1,1));
-        System.out.println(p.ifNeighbour(0,1));
-
+	    Points p=new Points(3,3);
+        Generator g= new Generator();
+        g.generateGraph(p,0,1);
+        for(int i=0;i<9;i++)
+            p.pointNeighbourPrint(i);
     }
 }

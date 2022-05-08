@@ -17,7 +17,7 @@ public class Generator {
         }
     }
 
-    public static double getRandomConnectionValue(double min,double max){
+    private double getRandomConnectionValue(double min,double max){
         return random.nextDouble(min,max);
     }
 

@@ -2,13 +2,19 @@ package com.company;
 
 public class Graf {
     private int graphs=1;
-    final private double min,max;
+    final private double min;
+    final private double max;
     private Points points;
 
     public Graf(int columns, int verses, double min, double max) {
         this.min = min;
         this.max = max;
         points=new Points(verses,columns);
+    }
+    public Graf(Points points){
+        min=0;
+        max=0;
+        this.points=points;
     }
 
     public int getGraphs() {
@@ -25,5 +31,18 @@ public class Graf {
 
     public Points getPoints() {
         return points;
+    }
+
+    public void printGraf(){
+        System.out.println("Liczba grafow spojnych: " + graphs);
+        System.out.println("Zakres wartosi: " + min + "-" + max);
+        int lenght=points.getColumns()*points.getVerses();
+        for(int i=0;i<lenght;i++)
+            points.pointNeighbourPrint(i);
+    }
+
+    public void generate(){
+        Generator generator=new Generator();
+        generator.generateGraph(points,min,max);
     }
 }

@@ -11,7 +11,7 @@ public class Points {
     public Points(int verses,int columns) {
         this.verses=verses;
         this.columns=columns;
-        connection=new double[verses][columns];
+        connection=new double[verses*columns][4];
     }
 
     public double getConection(int position, int neighbour){
@@ -28,6 +28,7 @@ public class Points {
     public int getColumns() {
         return columns;
     }
+
     //Do wczytywania z pliku, Tworzy połączenie w jedną stronę
     public void setOneWayConnection(int position, int neighbour, double value){
         int x=ifNeighbour(position, neighbour);
@@ -35,6 +36,7 @@ public class Points {
             throw new IllegalArgumentException("Podane wartości nie sąsiadują ze sobą!");
         connection[position][x]=value;
     }
+
     //Do generowania, Tworzy połączenie w dwie strony
     public void setTwoWayConnection(int position, int neighbour,double randomValue){
         int x=ifNeighbour(position, neighbour);
@@ -69,6 +71,20 @@ public class Points {
             return 3;
         else
             return -1;
+    }
+
+    public void pointNeighbourPrint(int position){
+        System.out.print(position + " -> ");
+        if(position-columns>-1)
+            System.out.print((position-columns) + ":" + connection[position][0] + " ");
+        if((position-1)/columns==position/columns && position>0)
+            System.out.print((position-1) + ":" + connection[position][1] + " ");
+        if((position+1)/columns==position/columns)
+            System.out.print((position+1) + ":" + connection[position][2] + " ");
+        if(position+columns<columns*verses)
+            System.out.print((position+columns) + ":" + connection[position][3] + " ");
+        System.out.print("\n");
+
     }
 
 }

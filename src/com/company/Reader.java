@@ -40,7 +40,7 @@ public class Reader {
             converted_bufor = toDoubleArrayList(bufor);
             j=0;
             while(j< converted_bufor.size()){
-                try {
+                try  {
                     points.setOneWayConnection(i, converted_bufor.get(j).intValue(), converted_bufor.get(j+1));
                 }catch (InputMismatchException e){
                     System.err.println("Plik zawiera niepoprawne dane");

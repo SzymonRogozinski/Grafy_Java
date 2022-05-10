@@ -9,6 +9,10 @@ public class Points {
     private double [][] connection;
 
     public Points(int verses,int columns) {
+        if(verses<1 || columns <1){
+            System.err.println("Niepoprawne wymiary grafu");
+            System.exit(1);
+        }
         this.verses=verses;
         this.columns=columns;
         connection=new double[verses*columns][4];
@@ -73,17 +77,17 @@ public class Points {
             return -1;
     }
 
-    public void pointNeighbourPrint(int position){
-        System.out.print(position + " -> ");
+    public String pointNeighbourPrint(int position){
+        String s="";
         if(position-columns>-1)
-            System.out.print((position-columns) + ":" + connection[position][0] + " ");
+            s+=(position-columns) + " :" + connection[position][0] + " ";
         if((position-1)/columns==position/columns && position>0)
-            System.out.print((position-1) + ":" + connection[position][1] + " ");
+            s+=(position-1) + " :" + connection[position][1] + " ";
         if((position+1)/columns==position/columns)
-            System.out.print((position+1) + ":" + connection[position][2] + " ");
+            s+=(position+1) + " :" + connection[position][2] + " ";
         if(position+columns<columns*verses)
-            System.out.print((position+columns) + ":" + connection[position][3] + " ");
-        System.out.print("\n");
+            s+=(position+columns) + " :" + connection[position][3] + " ";
+        return s;
 
     }
 

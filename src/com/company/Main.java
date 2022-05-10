@@ -1,12 +1,13 @@
 package com.company;
 
+import java.io.IOException;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 	    Reader r=new Reader();
-        Points p=null;
-        p=r.downloadGraph("mygraph");
-        Graf g=new Graf(p);
+        Graf g=new Graf("mygraph");
+        g.grafToFile("elo");
         g.printGraf();
     }
 }

@@ -9,10 +9,11 @@ import java.util.Scanner;
 
 public class Reader {
     Scanner file_scanner; //Skaner pliku
-    String [] bufor;
-    ArrayList<Double> converted_bufor;
+    String [] bufor; //Bufor do wczytywania wyrażeń z pliku
+    ArrayList<Double> converted_bufor; //Tu trzymane są wartości liczbowe, wyciągnięte z bufora
     Points points=null;
     public Points downloadGraph(String filename){
+        int verses, columns,i,j,lenght;
         //Wczytanie pliku
         try{
         file_scanner=new Scanner(new File(filename));
@@ -21,36 +22,48 @@ public class Reader {
             System.exit(1);
         }
         //Wczytanie wymiarów
-        bufor=file_scanner.nextLine().split(" ");
-        int verses, columns,i,j,lenght = 0;
         try {
-            converted_bufor = toDoubleArrayList(bufor);
-            verses = converted_bufor.get(0).intValue();
-            columns = converted_bufor.get(1).intValue();
-            points = new Points(verses, columns);
-            lenght=verses*columns;
-        }catch (ArrayIndexOutOfBoundsException e){
-            System.err.println("Plik zawiera niepoprawne dane");
+            bufor = (file_scanner.nextLine().replace(":","")).split(" ");
+        }catch (NoSuchElementException e){
+            System.err.println("Plik nie zawiera wymiarów");
             System.exit(1);
         }
+        //Czy zawiera tylko dwie liczby
+        if((converted_bufor = toDoubleArrayList(bufor)).size()!=2) {
+            System.err.println("Błędny format pliku! Wymiar to dwie liczby");
+            System.exit(1);
+        }
+        verses = converted_bufor.get(0).intValue();
+        columns = converted_bufor.get(1).intValue();
+        points = new Points(verses, columns);
+        lenght=verses*columns;
         //Wczytanie grafu
         for(i=0;i<lenght;i++){
-            //Pierw pobiera nową linię, następnie pozbywa się : i tworzy tablicę String
-            bufor=(file_scanner.nextLine().replace(":","")).split(" ");
-            converted_bufor = toDoubleArrayList(bufor);
+            //Pierw pobiera nową linię, następnie pozbywa się ":" i tworzy tablicę String
+            try {
+                bufor = (file_scanner.nextLine().replace(":", "")).split(" ");
+            }catch(NoSuchElementException e){
+                break;
+            }
+            //Czy podano wierzchołki w odpowiedni sposób
+            if((converted_bufor = toDoubleArrayList(bufor)).size()%2!=0){
+                System.err.println("Błędny format pliku! Droga nie ma wartości");
+                System.exit(1);
+            }
             j=0;
             while(j< converted_bufor.size()){
-                try  {
-                    points.setOneWayConnection(i, converted_bufor.get(j).intValue(), converted_bufor.get(j+1));
-                }catch (InputMismatchException e){
-                    System.err.println("Plik zawiera niepoprawne dane");
-                  System.exit(1);
-                }catch(NoSuchElementException e){
-                    System.err.println("Plik zawiera za mało wierzchołków");
-                   System.exit(1);
+                try {
+                    points.setOneWayConnection(i, converted_bufor.get(j).intValue(), converted_bufor.get(j + 1));
+                }catch(IllegalArgumentException e){
+                    System.err.println("Wierzchołek " + i + ": " + "Błędny format pliku! Wierzchołki są niepołączone");
+                    System.exit(1);
                 }
                 j+=2;
             }
+        }
+        if(i!=lenght){
+            System.err.println("Błędny format pliku! Złe wymiary grafu");
+            System.exit(1);
         }
         return points;
     }
@@ -66,10 +79,4 @@ public class Reader {
         }
         return value;
     }
-
-
-
-
-
-
 }

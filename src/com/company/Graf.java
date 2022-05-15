@@ -11,12 +11,12 @@ public class Graf {
     private Points points;
 
     //Konstruktor do grafu generowanego
-    public Graf(int columns, int verses, double min, double max) {
+    public Graf(int columns, int verses, double min, double max,int graphs) {
         this.min = min;
         this.max = max;
         points=new Points(verses,columns);
         Generator generator=new Generator();
-        generator.generateGraph(points,min,max);
+        generator.generateGraph(points,min,max,graphs);
     }
 
     //Konstruktor do grafu wczytywanego
@@ -29,6 +29,10 @@ public class Graf {
 
     public int getGraphs() {
         return graphs;
+    }
+
+    public void setGraphs(int graphs) {
+        this.graphs = graphs;
     }
 
     public double getMin() {

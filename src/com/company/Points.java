@@ -77,6 +77,14 @@ public class Points {
             return -1;
     }
 
+    public int howManyNeighbour(int position){
+        int i,h=0;
+        for(i=0;i<4;i++)
+            if(connection[position][i]!=0)
+                h++;
+        return h;
+    }
+
     public String pointNeighbourPrint(int position){
         String s="";
         if(position-columns>-1)

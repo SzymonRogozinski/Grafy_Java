@@ -77,6 +77,19 @@ public class Points {
             return -1;
     }
 
+    public int Neighbour(int position, int index){
+        if(index==0 && position>columns)
+            return position-columns;
+        else if(index==1 && position/columns==(position-1)/columns)
+            return position-1;
+        else if(index==2 && position/columns==(position+1)/columns)
+            return position+1;
+        else if (index==3 && position+columns<columns*verses)
+            return position+columns;
+        else
+            return -1;
+    }
+
     public int howManyNeighbour(int position){
         int i,h=0;
         for(i=0;i<4;i++)

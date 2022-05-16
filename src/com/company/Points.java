@@ -42,12 +42,12 @@ public class Points {
     }
 
     //Do generowania, Tworzy połączenie w dwie strony
-    public void setTwoWayConnection(int position, int neighbour,double randomValue){
-        int x=ifNeighbour(position, neighbour);
-        if(x==-1)
-            throw new IllegalArgumentException("Podane wartości nie sąsiadują ze sobą!");
-        connection[position][x]=randomValue;
-        connection[neighbour][ifNeighbour(neighbour,position)]=randomValue;
+    public void setTwoWayConnection(int position,int neighbour, int index,double randomValue){
+        connection[position][index]=randomValue;
+        if(index==2)
+            connection[neighbour][1]=randomValue;
+        else
+            connection[neighbour][0]=randomValue;
     }
 
     public void destroyConnection(int position, int neighbour){
@@ -62,16 +62,16 @@ public class Points {
         if(position<0 || neighbour<0 || position>columns*verses-1 || neighbour>columns*verses-1)
             return -1;
         //Góra
-        if(position-columns==neighbour)
+        if(position-columns==neighbour && connection[position][0]!=0)
             return 0;
         //Lewo
-        else if(position-1==neighbour && position/columns==neighbour/columns)
+        else if(position-1==neighbour && position/columns==neighbour/columns && connection[position][1]!=0)
             return 1;
         //Prawo
-        else if(position+1==neighbour && position/columns==neighbour/columns)
+        else if(position+1==neighbour && position/columns==neighbour/columns && connection[position][2]!=0)
             return 2;
         //Dół
-        else if(position+columns==neighbour)
+        else if(position+columns==neighbour && connection[position][3]!=0)
             return 3;
         else
             return -1;

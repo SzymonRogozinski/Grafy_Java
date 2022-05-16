@@ -12,10 +12,10 @@ public class Generator {
         for(int i=0;i<lenght;i++){
             //prawo
             if(i/points.getColumns()==(i+1)/points.getColumns())
-                points.setTwoWayConnection(i,i+1,getRandomConnectionValue(min, max));
+                points.setTwoWayConnection(i,i+1,2,getRandomConnectionValue(min, max));
             //dół
             if(i/ points.getColumns()< points.getVerses()-1)
-                points.setTwoWayConnection(i,i+points.getColumns(),getRandomConnectionValue(min, max));
+                points.setTwoWayConnection(i,i+points.getColumns(),3,getRandomConnectionValue(min, max));
         }
         //Dzielenie na mniejsze
         for(int i=1;i<graphs;i++){
@@ -33,41 +33,40 @@ public class Generator {
             r=random.nextInt(4);
             if(r==0){
                 w=position-points.getColumns();
-                if(w>-1 && points.getConection(position,w)!=0)
-                    return w;
             }else if (r==1){
                 w=position-1;
-                if(position/points.getColumns()==w/points.getColumns() && points.getConection(position,w)!=0)
-                    return w;
             }else if (r==2){
                 w=position+1;
-                if(position/points.getColumns()==w/points.getColumns() && points.getConection(position,w)!=0)
-                    return w;
             }else{
                 w=position+points.getColumns();
-                if(w<points.getVerses()*points.getColumns() && points.getConection(position,w)!=0)
-                    return w;
             }
+            if(points.ifNeighbour(position,w)!=-1)
+                return w;
         }
     }
 
     private void sliceGraph(Points points){
         ArrayList<Integer> way=new ArrayList<>();
-        int w,next_w,move,next_move,slice=0;
+        int control,w,next_w,move,next_move,slice=0;
         int lenght= points.getColumns() * points.getVerses();
         //Znalezienie początku
         do {
             w=random.nextInt(lenght);
-        } while(points.howManyNeighbour(w)<4 && points.howManyNeighbour(w)>0);
+        } while(points.howManyNeighbour(w)==4 || points.howManyNeighbour(w)==0);
         way.add(w);
         //Tworzenie ścieżki
+        control=0; //Służy do sprawdzenia, czy kod nie wykonuję się za długo
         do {
             next_w=getRandomNeighbour(points,w);
             if(!way.contains(next_w)){
                 way.add(next_w);
                 w=next_w;
-            }
-        } while(points.howManyNeighbour(w)==4);
+                control=0;
+            }else
+                control++;
+        } while(points.howManyNeighbour(w)==4 && control<40);
+        if(control==40)
+            return;
         //Cięcie
         //try i catch wyłapuje czy w danym przypadku nie wystąpił początek albo koniec, gdzie może nie mieć co ciąć
         //Co jeśli są tylko dwa punkty
@@ -128,6 +127,8 @@ public class Generator {
                     System.exit(1);
                 }
                 points.destroyConnection(w, points.Neighbour(w, slice));
+                w=next_w;
+                move=next_move;
             }
             //Ostatni element
             try {

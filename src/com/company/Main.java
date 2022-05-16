@@ -5,7 +5,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Graf g=new Graf(10,10,0,1,1);
+        Graf g=new Graf(10,10,0,1,6);
         g.printGraf();
     }
 }

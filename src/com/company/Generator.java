@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Generator {
-    private static Random random=new Random();
+    private static final Random random=new Random();
 
     public void generateGraph(Points points,double min,double max,int graphs){
         int lenght =points.getVerses()* points.getColumns();
@@ -70,69 +70,70 @@ public class Generator {
         } while(points.howManyNeighbour(w)==4);
         //Cięcie
         //try i catch wyłapuje czy w danym przypadku nie wystąpił początek albo koniec, gdzie może nie mieć co ciąć
-        //Pierwszy krok
-        w= way.get(0);
-        next_move=way.get(1);
-        move=points.ifNeighbour(w,next_w);
-        //Tnie po lewo
-        if(move==0 || move==3){
-            slice=1;
-        }
-        //Tnie od dołu
-        else if(move==1 || move==2){
-            slice=3;
-        }
-        else{
-            System.err.println("Błąd przy tworzeniu ścieżki tnącej");
-            System.exit(1);
-        }
-        try {
-            points.destroyConnection(w, points.Neighbour(w, slice));
-        }catch(IllegalArgumentException e){
-            ;
-        }
-        w=next_w;
-        //Reszta ściężki
-        for(int i=2;i<way.size();i++){
-            next_w=way.get(i);
-            next_move= points.ifNeighbour(w,next_w);
-            //Tnie po lewo
-            if((next_move==0 || next_move==3) && next_move==move){
-                slice=1;
-            }
-            //Tnie od dołu
-            else if((next_move==1 || next_move==2) && next_move==move){
-                slice=3;
-            }
-            //Tnie po lewo, ale wcześniej też od dołu
-            else if((next_move==0 || next_move==3)){
-                slice=1;
-                try {
-                    points.destroyConnection(w, points.Neighbour(w, 3));
-                }catch(IllegalArgumentException e){
-                    ;
+        //Co jeśli są tylko dwa punkty
+        if(way.size()==2){
+            if(points.howManyNeighbour(way.get(0))==1 && points.howManyNeighbour(way.get(1))==1){ //Jeśli są połączone tylko ze sobą
+                points.destroyConnection(way.get(0),way.get(1));
+            } else{ //Jeśli istnieją połączenia z innymi punktami
+                for (int j = 0; j < 4; j++) {
+                    if(points.Neighbour(way.get(0),j)==way.get(1)){
+                        try {
+                            points.destroyConnection(way.get(0), points.Neighbour(way.get(0), j));
+                        } catch (IllegalArgumentException ignored) { }
+                    }
+                }
+                for (int j = 0; j < 4; j++) {
+                    if(points.Neighbour(way.get(1),j)==way.get(0)){
+                        try {
+                            points.destroyConnection(way.get(1), points.Neighbour(way.get(1), j));
+                        } catch (IllegalArgumentException ignored) { }
+                    }
                 }
             }
-            //Tnie od dołu, ale wcześniej też po lewej
-            else if((next_move==1 || next_move==2)){
-                slice=3;
-                try {
-                    points.destroyConnection(w, points.Neighbour(w, 1));
-                }catch(IllegalArgumentException e){
-                    ;
-                }
-            }
-            else{
+        }else {
+            //Droga dłuższa niż dwa
+            //Pierwszy krok
+            w = way.get(0);
+            next_w = way.get(1);
+            move = points.ifNeighbour(w, next_w);
+            if (move == 0 || move == 3) { //Tnie po lewo
+                slice = 1;
+            } else if (move == 1 || move == 2) { //Tnie od dołu
+                slice = 3;
+            } else {
                 System.err.println("Błąd przy tworzeniu ścieżki tnącej");
                 System.exit(1);
             }
             try {
                 points.destroyConnection(w, points.Neighbour(w, slice));
-            }catch(IllegalArgumentException e){
-                ;
+            } catch (IllegalArgumentException ignored) {
+            }
+            w = next_w;
+            //Reszta ściężki
+            for (int i = 2; i < way.size(); i++) {
+                next_w = way.get(i);
+                next_move = points.ifNeighbour(w, next_w);
+                if ((next_move == 0 || next_move == 3) && next_move == move) { //Tnie po lewo
+                    slice = 1;
+                } else if ((next_move == 1 || next_move == 2) && next_move == move) { //Tnie od dołu
+                    slice = 3;
+                } else if ((next_move == 0 || next_move == 3)) { //Tnie po lewo, ale wcześniej też od dołu
+                    slice = 1;
+                    points.destroyConnection(w, points.Neighbour(w, 3));
+                } else if ((next_move == 1 || next_move == 2)) { //Tnie od dołu, ale wcześniej też po lewej
+                    slice = 3;
+                    points.destroyConnection(w, points.Neighbour(w, 1));
+                } else {
+                    System.err.println("Błąd przy tworzeniu ścieżki tnącej");
+                    System.exit(1);
+                }
+                points.destroyConnection(w, points.Neighbour(w, slice));
+            }
+            //Ostatni element
+            try {
+                points.destroyConnection(next_w, points.Neighbour(next_w, slice));
+            } catch (IllegalArgumentException ignored) {
             }
         }
-
     }
-
 }

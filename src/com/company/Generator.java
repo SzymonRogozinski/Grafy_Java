@@ -7,7 +7,7 @@ public class Generator {
     private static final Random random=new Random();
 
     public void generateGraph(Points points,double min,double max,int graphs){
-        int lenght =points.getVerses()* points.getColumns();
+        int lenght =points.getVerses() * points.getColumns();
         //Generowanie jednego grafu
         for(int i=0;i<lenght;i++){
             //prawo

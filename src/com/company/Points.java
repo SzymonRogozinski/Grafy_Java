@@ -35,7 +35,7 @@ public class Points {
 
     //Do wczytywania z pliku, Tworzy połączenie w jedną stronę
     public void setOneWayConnection(int position, int neighbour, double value){
-        int x=ifNeighbour(position, neighbour);
+        int x=ifNeighbourNotConnected(position, neighbour);
         if(x==-1)
             throw new IllegalArgumentException("Podane wartości nie sąsiadują ze sobą!");
         connection[position][x]=value;
@@ -57,7 +57,7 @@ public class Points {
         connection[position][x]=0.0;
         connection[neighbour][ifNeighbour(neighbour,position)]=0.0;
     }
-
+    //Sprawdza czy wierzchołki ze sobą sąsiadują i czy mają połączenie
     public int ifNeighbour(int position, int neighbour){
         if(position<0 || neighbour<0 || position>columns*verses-1 || neighbour>columns*verses-1)
             return -1;
@@ -76,7 +76,26 @@ public class Points {
         else
             return -1;
     }
-
+    //To samo co ifNeighbour ale nie sprawdza wartości połączenia
+    public int ifNeighbourNotConnected(int position, int neighbour){
+        if(position<0 || neighbour<0 || position>columns*verses-1 || neighbour>columns*verses-1)
+            return -1;
+        //Góra
+        if(position-columns==neighbour)
+            return 0;
+            //Lewo
+        else if(position-1==neighbour && position/columns==neighbour/columns)
+            return 1;
+            //Prawo
+        else if(position+1==neighbour && position/columns==neighbour/columns)
+            return 2;
+            //Dół
+        else if(position+columns==neighbour)
+            return 3;
+        else
+            return -1;
+    }
+    //Zwraca sąsiada, 0-góra, 1-lewo 2-prawo 3-dół
     public int Neighbour(int position, int index){
         if(index==0 && position>columns)
             return position-columns;
@@ -97,7 +116,7 @@ public class Points {
                 h++;
         return h;
     }
-
+    //Zwraca do Stringa sąsiadów i połączenia
     public String pointNeighbourPrint(int position){
         String s="";
         if(position-columns>-1)
@@ -111,5 +130,4 @@ public class Points {
         return s;
 
     }
-
 }
